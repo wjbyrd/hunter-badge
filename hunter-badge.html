@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hunter Badge</title>
+
+<style>
+  body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;margin:0;background:#f8fafc}
+  .card{max-width:720px;margin:24px auto;background:#fff;border:1px solid #e5e7eb;border-radius:14px}
+  header{background:#f9fafb;padding:.9rem 1rem;border-bottom:1px solid #e5e7eb}
+  h1{margin:0;font-size:1.25rem;color:#111827}
+  main{padding:1rem 1.25rem;color:#374151;line-height:1.5}
+  input,button{font:inherit}
+  .row{margin:.5rem 0}
+  input{width:100%;max-width:320px;padding:.5rem;border:1px solid #d1d5db;border-radius:8px}
+  button{margin-top:.75rem;padding:.6rem 1rem;border:1px solid #2563eb;border-radius:8px;background:#2563eb;color:#fff;cursor:pointer}
+  small{color:#6b7280}
+  img.badge{max-width:200px;display:block}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+  <header>
+    <h1>Hunter Badge (Download)</h1>
+  </header>
+
+  <main>
+    <p>🕵️ <strong>Congratulations!</strong>  
+       You’ve discovered four or more Easter eggs in the course — a sign of genuine curiosity and a sharp eye.  
+       Use this page to download your official Hunter Badge.</p>
+
+    <!-- email input -->
+    <div class="row">
+      <label for="badgeId">Your Troy Email</label><br>
+      <input id="badgeId" type="email" placeholder="e.g., jdoe123@troy.edu" aria-label="Email">
+    </div>
+
+    <button id="downloadBtn">Download Hunter Badge (JSON)</button>
+
+    <p class="row"><small>Save both the JSON and PNG badge for your records.</small></p>
+
+    <!-- Badge PNG -->
+    <div class="row">
+      <img class="badge" src="./hunter-badge.png?v=1" alt="Hunter Badge">
+      <a href="./hunter-badge.png?v=1" download>Download Badge (PNG)</a>
+    </div>
+  </main>
+</div>
+
+<script>
+  const ORG = "Troy University";
+  const UNIT = "TEC • Provost Fellows • AI Forward Initiative";
+  const CONTACT = "teaching-excellence@troy.edu";
+  const CRITERIA = "Awarded to students who find four or more hidden Easter eggs in the AI in Teaching & Learning course.";
+  const ISSUED = "2025-11-17";
+  const EVIDENCE_URL = "https://example.edu/teaching-excellence/resources";
+
+  document.getElementById('downloadBtn').addEventListener('click', () => {
+    const badgeId = (document.getElementById('badgeId').value || '').trim();
+    if (!badgeId) {
+      alert('Please enter your Troy email (e.g., jdoe123@troy.edu).');
+      return;
+    }
+
+    const badge = {
+      spec: "ai-ready-id/v1",
+      version: "1.0",
+      badge_id: badgeId,
+      issuer: { org: ORG, unit: UNIT, contact: CONTACT },
+      badge: { name: "Hunter Badge", criteria: CRITERIA, issued: ISSUED, expires: null },
+      learner: { identifier_type: "email", identifier: badgeId },
+      evidence: [EVIDENCE_URL]
+    };
+
+    const blob = new Blob([JSON.stringify(badge, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = Object.assign(document.createElement('a'), { href: url, download: 'Hunter-Badge.json' });
+
+    document.body.appendChild(a);
+    a.click();
+    URL.revokeObjectURL(url);
+    a.remove();
+  });
+</script>
+
+</body>
+</html>
